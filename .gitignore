@@ -1,0 +1,14 @@
+node-v7.7.3-linux-armv6l/
+node-v9.7.1-linux-armv6l/
+go/
+node_modules/
+wiringPi/
+.bash_history .bash_logout
+.node-gyp/
+.bashrc
+.bash_history
+.bash_logout
+.npm/
+.viminfo
+.config/
+.profile
