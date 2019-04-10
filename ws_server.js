@@ -23,8 +23,7 @@ function checkDeg(ws, deg){
     let buffer = [];
     let total = 0;
     const puffer = 0;
-    
-    const pwm = 0.6;
+    const pwm = 0.5;
 
     // ??? was das
     //ws.send('')
