@@ -64,6 +64,17 @@ function checkDeg(ws, deg){
 }
 
 
+function checkDist (ws, dist){
+
+    const speed = 5;  //cm pro sec
+    // dist  in cm 
+    let time = (dist / speed) * 1000;
+    setTimeout(() => {
+        console.log(`für ${time} gefahren`)
+        move.stop();
+        ws.send(JSON.stringify({ chairBusy: false }));
+    }, time);
+}
 
 
 console.log('Websocket listens on port 1312 acab...');
@@ -85,7 +96,7 @@ wss.on('connection', function connection(ws) {
         } else if (message.motionType === "Straight") {
             
             move.forward(message.velocity);
-            ws.send(JSON.stringify({chairBusy: true})); checkDeg(ws, message.value);
+            ws.send(JSON.stringify({chairBusy: true})); checkDist(ws, message.value);
             
         } else if (message.motionType === "Stop") {
 
