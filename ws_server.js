@@ -54,8 +54,11 @@ function checkDeg(ws, deg){
                     move.stop();
                     clearInterval(refreshIntervalId);
                     refreshIntervalId = null;
-                    ws.send(JSON.stringify({chairBusy: false}));
-                    return
+                    setTimeout(() => {
+                        ws.send(JSON.stringify({chairBusy: false}));
+                        return
+                    }, 2000);
+                    
                 }
                 buffer = [];
             }
