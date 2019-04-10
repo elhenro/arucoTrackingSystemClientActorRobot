@@ -75,11 +75,11 @@ client.on('data', function(data) {
   }
   else if (data = 'left') {
     move.stop();
-    move.turnLeft(0.5);
+    move.turnLeft(0.3);
   }
   else if (data = 'right') {
     move.stop();
-    move.turnrRight(0.5);
+    move.turnrRight(0.3);
   }
   else {
     move.stop();
