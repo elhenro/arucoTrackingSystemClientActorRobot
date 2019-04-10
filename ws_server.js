@@ -24,15 +24,17 @@ function checkDeg(ws, deg){
     let total = 0;
     const puffer = 0;
     
+    const pwm = 0.6;
+
     // ??? was das
     //ws.send('')
     // detection for: turn 90 deg. left, ( counter clockwise )
 
     if (deg > 0) {
-      move.turnRight(0.3);
+      move.turnRight(pwm);
     }
     else {
-        move.turnLeft(0.3);
+        move.turnLeft(pwm);
     }
 
      refreshIntervalId  = setInterval(() => {
@@ -67,8 +69,12 @@ function checkDeg(ws, deg){
 function checkDist (ws, dist){
 
     const speed = 5;  //cm pro sec
+    const pwm = 1;
     // dist  in cm 
     let time = (dist / speed) * 1000;
+
+    move.forward(pwm);
+
     setTimeout(() => {
         console.log(`für ${time} gefahren`)
         move.stop();
@@ -95,7 +101,7 @@ wss.on('connection', function connection(ws) {
 
         } else if (message.motionType === "Straight") {
             
-            move.forward(message.velocity);
+            
             ws.send(JSON.stringify({chairBusy: true})); checkDist(ws, message.value);
             
         } else if (message.motionType === "Stop") {
