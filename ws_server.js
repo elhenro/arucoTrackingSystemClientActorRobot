@@ -24,7 +24,7 @@ function checkDeg(ws, deg){
     let total = 0;
     const puffer = 0;
     const pwm = 0.5;
-
+    
     // ??? was das
     //ws.send('')
     // detection for: turn 90 deg. left, ( counter clockwise )
@@ -49,7 +49,7 @@ function checkDeg(ws, deg){
                 }
 
                 // console.log(total)
-                if (Math.abs(deg) <= Math.abs(total)){
+                if (Math.abs(deg) - 5 <= Math.abs(total)){
                     console.log(`um ${deg} gedreht`)
                     move.stop();
                     clearInterval(refreshIntervalId);
