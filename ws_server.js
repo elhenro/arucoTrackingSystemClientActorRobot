@@ -67,7 +67,7 @@ function checkDeg(ws, deg){
 
 
 function checkDist (ws, dist){
-    const space = 25;
+    const space = 2.5;
     const speed = 18.8;  //cm pro sec
     const pwm = 1;
     // dist  in cm 
