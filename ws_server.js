@@ -67,11 +67,11 @@ function checkDeg(ws, deg){
 
 
 function checkDist (ws, dist){
-
-    const speed = 5;  //cm pro sec
+    const space = 25;
+    const speed = 18.8;  //cm pro sec
     const pwm = 1;
     // dist  in cm 
-    let time = (dist / speed) * 1000;
+    let time = ((dist / space) / speed) * 1000;
 
     move.forward(pwm);
 

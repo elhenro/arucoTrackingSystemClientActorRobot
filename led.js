@@ -59,7 +59,7 @@ client.on('data', function(data) {
 	console.log(data.toString());
   if (data == 'go') {
     move.stop();
-    move.forward(0.5);
+    move.forward(1);
     // console.log(true);
   }
   else if (data == 'back') {
