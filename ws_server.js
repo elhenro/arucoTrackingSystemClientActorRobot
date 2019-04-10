@@ -100,7 +100,7 @@ wss.on('connection', function connection(ws) {
             
         } else if (message.motionType === "Stop") {
 
-            ws.send(JSON.stringify({chairBusy: false})); checkDeg(ws, message.value);
+            ws.send(JSON.stringify({chairBusy: false}));
             move.stop();
         }
     });
