@@ -9,6 +9,8 @@ var pin4 = new Gpio(23, 'out');
 var pwm1 = new PWM(13, {mode: Gpio.OUTPUT});
 var pwm2 = new PWM(12, {mode: Gpio.OUTPUT});
 
+pwm1.pwmFrequency(30)
+pwm2.pwmFrequency(30)
 
 exports.forward = function(speed) {
   if (speed == 1) {
