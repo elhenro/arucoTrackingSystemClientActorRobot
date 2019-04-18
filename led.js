@@ -148,7 +148,7 @@ stdin.addListener("data", function(d) {
       break;
     case 'left':
       move.stop();
-      move.turnLeft(0.6);
+      move.turnLeft(0.3);
       if (spinner1.isSpinning) {
         spinner1.succeed('next');
       }
@@ -163,7 +163,7 @@ stdin.addListener("data", function(d) {
       break;
     case 'right':
       move.stop();
-      move.turnRight(0.6);
+      move.turnRight(0.3);
       if (spinner1.isSpinning) {
         spinner1.succeed('next');
       }

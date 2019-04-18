@@ -23,7 +23,8 @@ function checkDeg(ws, deg){
     let buffer = [];
     let total = 0;
     const puffer = 0;
-    const pwm = 0.5;
+    //const pwm = 0.4;
+    const pwm = 0.3;
     const pwmSlow  = 0.3;
     let direction = "";
     
@@ -44,25 +45,27 @@ function checkDeg(ws, deg){
     
 
      reduceBuffer  = setInterval(() => {
-       
+                if (buffer.length < 1) return
+
                 let sum;
                 let bufferLength = buffer.length;
+                ///console.log(buffer);
                 sum = buffer.reduce((pv, cv) => pv + cv);
-                sum = (sum/ bufferLength) * 100;
-                console.log('berechne');
+                sum = (sum/ bufferLength) / 10;
                 if (sum < -1 || sum >= 1 ){
                     total = total + sum;
                 }
 
                 // decrease speed for final fine-tuning
+                /*
                 if (Math.abs(deg) - 15 <= Math.abs(total)) {
                     console.log('slow');
                     if (direction == "right") {
-                        move.right(pwmSlow);
+                        move.turnRight(pwmSlow);
                     }else{
-                        move.left(pwmSlow);
+                        move.turnLeft(pwmSlow);
                     }
-                }
+                }*/
 
 
                 // stop if arrived at final angle
