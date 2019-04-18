@@ -12,3 +12,5 @@ wiringPi/
 .viminfo
 .config/
 .profile
+.ssh/
+.gitconfig

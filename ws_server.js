@@ -13,47 +13,65 @@ var mpu6050 = require('mpu6050');
 // Instantiate and initialize.
 var mpu = new mpu6050();
 mpu.initialize();
-let refreshIntervalId  = null;
+let reduceBuffer  = null;
+let collectBuffer = null;
 
 function checkDeg(ws, deg){
-  if (refreshIntervalId != null) {
-    // console.log('läft', refreshIntervalId);
+    if (reduceBuffer != null && collectBuffer != null) {
     return;
   }
     let buffer = [];
     let total = 0;
     const puffer = 0;
     const pwm = 0.5;
+    const pwmSlow  = 0.3;
+    let direction = "";
     
-    // ??? was das
-    //ws.send('')
-    // detection for: turn 90 deg. left, ( counter clockwise )
-
     if (deg > 0) {
       move.turnRight(pwm);
+      direction = "right";
     }
     else {
         move.turnLeft(pwm);
     }
 
-     refreshIntervalId  = setInterval(() => {
-        mpu.getRotation((err, [x,y,z]) =>{
-            buffer.unshift(z/131);
-            if (buffer.length >= 10) {
-                let sum;
-                sum = buffer.reduce((pv, cv) => pv + cv);
-                sum = sum/40;
+    collectBuffer = setInterval(() => {
+        mpu.getRotation((err, [x, y, z]) => {
+            buffer.unshift(z / 131);
+        });
+    }, 10);
 
+    
+
+     reduceBuffer  = setInterval(() => {
+       
+                let sum;
+                let bufferLength = buffer.length;
+                sum = buffer.reduce((pv, cv) => pv + cv);
+                sum = (sum/ bufferLength) * 100;
+                console.log('berechne');
                 if (sum < -1 || sum >= 1 ){
                     total = total + sum;
                 }
 
-                // console.log(total)
-                if (Math.abs(deg) - 5 <= Math.abs(total)){
-                    console.log(`um ${deg} gedreht`)
+                // decrease speed for final fine-tuning
+                if (Math.abs(deg) - 15 <= Math.abs(total)) {
+                    console.log('slow');
+                    if (direction == "right") {
+                        move.right(pwmSlow);
+                    }else{
+                        move.left(pwmSlow);
+                    }
+                }
+
+
+                // stop if arrived at final angle
+                if (Math.abs(deg) - 2 <= Math.abs(total)){
+                    console.log(`um ${total} gedreht`)
                     move.stop();
-                    clearInterval(refreshIntervalId);
-                    refreshIntervalId = null;
+                    clearInterval(reduceBuffer && collectBuffer);
+                    reduceBuffer = null;
+                    collectBuffer = null;
                     setTimeout(() => {
                         ws.send(JSON.stringify({chairBusy: false}));
                         return
@@ -61,15 +79,14 @@ function checkDeg(ws, deg){
                     
                 }
                 buffer = [];
-            }
-        });
-    }, 25);
+          
+    }, 100);
 
 }
 
 
 function checkDist (ws, dist){
-    const space = 20;
+    const space = 25;
     const speed = 18.8;  //cm pro sec
     const pwm = 1;
     // dist  in cm 
@@ -86,6 +103,7 @@ function checkDist (ws, dist){
 
 
 console.log('Websocket listens on port 1312 acab...');
+console.log('new');
 wss.on('connection', function connection(ws) {
     ws.send(JSON.stringify({chairready: true}));
 
