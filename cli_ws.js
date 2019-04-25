@@ -10,6 +10,92 @@ const wss = new WebSocket.Server({port: 1312});
 
 var mpu6050 = require('mpu6050');
 
+
+//! CLI config
+var blessed = require('blessed'),
+    contrib = require('blessed-contrib'),
+    screen = blessed.screen(),
+    grid = new contrib.grid({
+        rows: 12,
+        cols: 12,
+        screen: screen
+    }),
+
+
+    line = grid.set(0, 0, 8, 12, contrib.line, {
+        minY: -5,
+        maxY: 5,
+        label: 'MPU-6050 - Acceleration',
+        numYLabels: 20,
+        showLegend: true,
+        abbreviate: false,
+        xLabelPadding: 9,
+        legend: {
+            width: 4
+        },
+        style: {
+            baseline: 'white'
+        }
+
+
+        //, wholeNumbersOnly: true
+    })
+
+    ,
+    data = [{
+        title: '0',
+        x: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        y: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        style: {
+            line: 'white'
+        }
+    }, {
+        title: 'Y',
+        x: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        y: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        style: {
+            line: 'green'
+        }
+    }, {
+        title: 'Z',
+        x: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        y: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        style: {
+            line: 'yellow'
+        }
+    }, {
+        title: 'X',
+        x: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        y: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        style: {
+            line: 'red'
+        }
+    }],
+    table = grid.set(8, 0, 4, 12, contrib.table, {
+        keys: true,
+        fg: 'white',
+        selectedFg: 'white',
+        selectedBg: 'blue',
+        interactive: false,
+        label: 'Values',
+        width: '100%',
+        height: '10%',
+        border: {
+            type: "line",
+            fg: "cyan"
+        },
+        columnSpacing: 5 //in chars
+            ,
+        columnWidth: [5, 20, 20, 20] /*in chars*/
+    })
+
+
+
+
+
+
+
+
 // Instantiate and initialize.
 var mpu = new mpu6050();
 mpu.initialize();
@@ -160,7 +246,6 @@ function checkDist (ws, dist){
 
 
 console.log('Websocket listens on port 1312 acab...');
-console.log('new');
 wss.on('connection', function connection(ws) {
     ws.send(JSON.stringify({chairready: true}));
 
