@@ -90,7 +90,57 @@ var blessed = require('blessed'),
     })
 
 
+//! CLI  refresh
+let i = 20;
+const refreshIntervalId = setInterval(() => {
+    mpu.getRotation((err, [x, y, z]) => {
+        // buffer.unshift(z / 131);
+        //console.log(x/131, y/131, z/131);
+        i++;
+        data[3].y.push((x / 131) - 8);
+        data[3].x.push(i);
+        data[3].x.shift();
+        data[3].y.shift();
 
+        data[1].y.push((y / 131) - 1);
+        data[1].x.push(i);
+        data[1].x.shift();
+        data[1].y.shift();
+
+        // data[2].y.push((z / 131) - 96 );
+        // data[2].x.push(i);
+        // data[2].x.shift();
+        // data[2].y.shift();
+
+
+        data[0].y.push(0);
+        data[0].x.push(i);
+        data[0].x.shift();
+        data[0].y.shift();
+
+        line.setData(data);
+
+        table.setData({
+            headers: ['TYPE', 'X', 'Y', 'Z'],
+            data: [
+                ['RAW', x, y, z],
+                [],
+                ['/16384', x / 16384, y / 16384, z / 16384],
+                [],
+                ['/1024', x / 1024, y / 1024, z / 1024],
+                [],
+                ['round', Math.round(x / 16384), Math.round(y / 16384), Math.round(z / 16384)]
+            ]
+        })
+
+        screen.key(['escape', 'q', 'C-c'], function (ch, key) {
+            return process.exit(0);
+        });
+
+        screen.render();
+
+    });
+}, 100);
 
 
 
