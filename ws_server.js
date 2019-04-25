@@ -94,12 +94,66 @@ function checkDist (ws, dist){
     const pwm = 1;
     // dist  in cm 
     let time = ((dist / space) / speed) * 1000;
+    let buffer = [];
+    let total = 0;
 
-    move.forward(pwm);
+    //* check if moving straight
+    // ! test
+    if (reduceBuffer != null && collectBuffer != null) {
+        return;
+    }
+
+    collectBuffer = setInterval(() => {
+        mpu.getRotation((err, [x, y, z]) => {
+            buffer.unshift(z / 131);
+        });
+    }, 10);
+
+
+    reduceBuffer = setInterval(() => {
+        if (buffer.length < 1) return
+
+        let sum;
+        let bufferLength = buffer.length;
+        ///console.log(buffer);
+        sum = buffer.reduce((pv, cv) => pv + cv);
+        sum = (sum / bufferLength) / 10;
+        if (sum < -1 || sum >= 1) {
+            total = total + sum;
+        }
+
+        if (total < 1 && total > -1) {
+            //* move at same speed
+            move.forward(pwm, pwm);
+        }
+
+        //TODO test directions and speeds !!
+
+        if (total > 1 ){
+            //? move to the right?
+            //*        right | left
+            move.forward(pwm, pwm - 0.1);
+        }
+
+        if (total < -1) {
+            //? move to the left?
+            //*             right | left
+            move.forward(pwm - 0.1, pwm);
+        }
+
+        buffer = [];
+
+    }, 100);
+
+
+    //! remove above und keep this 
+    //move.forward(pwm);
 
     setTimeout(() => {
         console.log(`für ${time} gefahren`)
         move.stop();
+         reduceBuffer = null;
+         collectBuffer = null;
         ws.send(JSON.stringify({ chairBusy: false }));
     }, time);
 }

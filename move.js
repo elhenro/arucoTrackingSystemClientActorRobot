@@ -12,7 +12,7 @@ var pwm2 = new PWM(12, {mode: Gpio.OUTPUT});
 pwm1.pwmFrequency(30)
 pwm2.pwmFrequency(30)
 
-exports.forward = function(speed) {
+exports.forward = function(speedr, speedl) {
   if (speed == 1) {
     speed = 255;
   }
@@ -20,8 +20,8 @@ exports.forward = function(speed) {
     speed = Math.round(Math.abs(speed) * 255);
   }
   // console.log(speed);
-  pwm1.pwmWrite(speed);
-  pwm2.pwmWrite(speed);
+  pwm1.pwmWrite(speedr);
+  pwm2.pwmWrite(speedl);
   pin1.writeSync(1);
   pin2.writeSync(0);
   pin3.writeSync(0);
