@@ -13,11 +13,16 @@ pwm1.pwmFrequency(30)
 pwm2.pwmFrequency(30)
 
 exports.forward = function(speedr, speedl) {
-  if (speed == 1) {
-    speed = 255;
+  if (speedr == 1) {
+    speedr = 255;
   }
   else {
-    speed = Math.round(Math.abs(speed) * 255);
+    speedr = Math.round(Math.abs(speedr) * 255);
+  }
+  if (speedl == 1) {
+    speedl = 255;
+  } else {
+    speedl = Math.round(Math.abs(speedl) * 255);
   }
   // console.log(speed);
   pwm1.pwmWrite(speedr);
