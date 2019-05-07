@@ -1,5 +1,6 @@
 var Gpio = require('onoff').Gpio;
 var PWM = require('pigpio').Gpio;
+const settings = require('./settings');
 
 var pin1 = new Gpio(14, 'out');
 var pin2 = new Gpio(15, 'out');
@@ -9,8 +10,8 @@ var pin4 = new Gpio(23, 'out');
 var pwm1 = new PWM(13, {mode: Gpio.OUTPUT});
 var pwm2 = new PWM(12, {mode: Gpio.OUTPUT});
 
-pwm1.pwmFrequency(30)
-pwm2.pwmFrequency(30)
+pwm1.pwmFrequency(settings.frequency)
+pwm2.pwmFrequency(settings.frequency)
 
 exports.forward = function(speedr, speedl) {
   if (speedr == 1) {
@@ -27,10 +28,10 @@ exports.forward = function(speedr, speedl) {
   // console.log(speed);
   pwm1.pwmWrite(speedr);
   pwm2.pwmWrite(speedl);
-  pin1.writeSync(1);
-  pin2.writeSync(0);
-  pin3.writeSync(0);
-  pin4.writeSync(1);
+  pin1.writeSync(settings.forward.pin1);
+  pin2.writeSync(settings.forward.pin2);
+  pin3.writeSync(settings.forward.pin3);
+  pin4.writeSync(settings.forward.pin4);
 
 }
 
@@ -52,10 +53,10 @@ exports.turnRight = function(speed) {
 
   pwm1.pwmWrite(speed);
   pwm2.pwmWrite(speed);
-  pin1.writeSync(0);
-  pin2.writeSync(1);
-  pin3.writeSync(0);
-  pin4.writeSync(1);
+  pin1.writeSync(settings.right.pin1);
+  pin2.writeSync(settings.right.pin2);
+  pin3.writeSync(settings.right.pin3);
+  pin4.writeSync(settings.right.pin4);
 
 }
 
@@ -68,10 +69,10 @@ exports.turnLeft = function(speed) {
   }
   pwm1.pwmWrite(speed);
   pwm2.pwmWrite(speed);
-  pin1.writeSync(1);
-  pin2.writeSync(0);
-  pin3.writeSync(1);
-  pin4.writeSync(0);
+  pin1.writeSync(settings.left.pin1);
+  pin2.writeSync(settings.left.pin2);
+  pin3.writeSync(settings.left.pin3);
+  pin4.writeSync(settings.left.pin4);
 
 }
 exports.back = function(speed) {
@@ -83,9 +84,9 @@ exports.back = function(speed) {
   }
   pwm1.pwmWrite(speed);
   pwm2.pwmWrite(speed);
-  pin1.writeSync(0);
-  pin2.writeSync(1);
-  pin3.writeSync(1);
-  pin4.writeSync(0);
+  pin1.writeSync(settings.back.pin1);
+  pin2.writeSync(settings.back.pin2);
+  pin3.writeSync(settings.back.pin3);
+  pin4.writeSync(settings.back.pin4);
 
 }

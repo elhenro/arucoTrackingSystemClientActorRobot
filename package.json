@@ -19,7 +19,9 @@
   "dependencies": {
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.15",
+    "mpu6050": "^0.1.4",
     "onoff": "^4.1.1",
+    "ora": "^3.4.0",
     "pigpio": "^1.2.2",
     "ws": "^6.2.1"
   }

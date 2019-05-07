@@ -3,6 +3,7 @@ var net = require('net');
 var ora = require('ora');
 var spinners = require('cli-spinners');
 var move = require('./move');
+const settings = require('./settings');
 
 var roboID = 10;
 
@@ -59,12 +60,12 @@ client.on('data', function(data) {
 	console.log(data.toString());
   if (data == 'go') {
     move.stop();
-    move.forward(1);
+    move.forward(settings.moveSpeed);
     // console.log(true);
   }
   else if (data == 'back') {
     move.stop();
-    move.back(1);
+    move.back(settings.moveSpeed);
   }
   else if (data = 'stop') {
     move.stop();
@@ -75,11 +76,11 @@ client.on('data', function(data) {
   }
   else if (data = 'left') {
     move.stop();
-    move.turnLeft(0.3);
+    move.turnLeft(settings.turnSpeed);
   }
   else if (data = 'right') {
     move.stop();
-    move.turnrRight(0.3);
+    move.turnrRight(settings.turnSpeed);
   }
   else {
     move.stop();
@@ -102,7 +103,7 @@ stdin.addListener("data", function(d) {
   switch (d.toString().trim()) {
     case 'go':
       move.stop();
-      move.forward(1);
+      move.forward(settings.moveSpeed);
       //console.log('\033[2J');
       //console.log('⏫');
       if (spinner1.isSpinning) {
@@ -118,7 +119,7 @@ stdin.addListener("data", function(d) {
       break;
     case 'back':
       move.stop();
-      move.back(0.7);
+      move.back(settings.moveSpeed);
       //console.log('\033[2J');
       //console.log('⏫');
       if (spinner1.isSpinning) {
@@ -148,7 +149,7 @@ stdin.addListener("data", function(d) {
       break;
     case 'left':
       move.stop();
-      move.turnLeft(0.3);
+      move.turnLeft(settings.turnSpeed);
       if (spinner1.isSpinning) {
         spinner1.succeed('next');
       }
@@ -163,7 +164,7 @@ stdin.addListener("data", function(d) {
       break;
     case 'right':
       move.stop();
-      move.turnRight(0.3);
+      move.turnRight(settings.turnSpeed);
       if (spinner1.isSpinning) {
         spinner1.succeed('next');
       }
