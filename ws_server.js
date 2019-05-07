@@ -2,7 +2,7 @@
     This script runs on
     all chairs
  */
-
+const settings = require('./settings');
 const move = require('./move');
 const WebSocket = require('ws');
 
@@ -29,8 +29,8 @@ function checkDeg(ws, deg) {
     let total = 0;
     const puffer = 0;
     //const pwm = 0.4;
-    const pwm = 0.3;
-    const pwmSlow = 0.3;
+    const pwm = settings.turnSpeed;
+    const pwmSlow = settings.turnSpeedSlow;
     let direction = "";
 
     if (deg > 0) {
@@ -98,7 +98,7 @@ function checkDeg(ws, deg) {
 function checkDist(ws, dist) {
     const space = 25;
     const speed = 18.8;  //cm pro sec
-    const pwm = 1;
+    const pwm = settings.moveSpeed;
     // dist  in cm 
     let time = ((dist / space) / speed) * 1000;
 
@@ -162,8 +162,7 @@ function checkDist(ws, dist) {
 }
 
 
-console.log('Websocket listens on port 1312 acab...');
-console.log('new');
+console.log('Websocket listens on port 1312 ...', settings.emoji);
 wss.on('connection', function connection(ws) {
     ws.send(JSON.stringify({chairready: true}));
 
@@ -193,7 +192,7 @@ wss.on('connection', function connection(ws) {
     });
 
     ws.on('close', function (data) {
-        console.log('closed connection', data);
+        console.log('closed connection', data, settings.emoji);
         move.stop();
     });
 });
