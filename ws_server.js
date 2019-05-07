@@ -165,7 +165,8 @@ function checkDist(ws, dist) {
 console.log('Websocket listens on port 1312 ...', settings.emoji);
 wss.on('connection', function connection(ws) {
     ws.send(JSON.stringify({chairready: true}));
-
+    console.log('some boi connected ✅');
+    
     ws.on('message', function incoming(message) {
         console.log('received: %s', message);
         message = JSON.parse(message);

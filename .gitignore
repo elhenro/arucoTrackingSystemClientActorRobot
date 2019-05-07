@@ -14,3 +14,4 @@ wiringPi/
 .profile
 .ssh/
 .gitconfig
+settings.js
