@@ -13,26 +13,30 @@ var mpu6050 = require('mpu6050');
 // Instantiate and initialize.
 var mpu = new mpu6050();
 mpu.initialize();
-let reduceBuffer  = null;
+let reduceBuffer = null;
 let collectBuffer = null;
+let chairBusy = false;
 
-function checkDeg(ws, deg){
+function checkDeg(ws, deg) {
+    chairBusy = true;
     if (reduceBuffer != null && collectBuffer != null) {
-    return;
-  }
+        return;
+    }
+    if (chairBusy == false) {
+        return;
+    }
     let buffer = [];
     let total = 0;
     const puffer = 0;
     //const pwm = 0.4;
     const pwm = 0.3;
-    const pwmSlow  = 0.3;
+    const pwmSlow = 0.3;
     let direction = "";
-    
+
     if (deg > 0) {
-      move.turnRight(pwm);
-      direction = "right";
-    }
-    else {
+        move.turnRight(pwm);
+        direction = "right";
+    } else {
         move.turnLeft(pwm);
     }
 
@@ -42,60 +46,61 @@ function checkDeg(ws, deg){
         });
     }, 10);
 
-    
 
-     reduceBuffer  = setInterval(() => {
-                if (buffer.length < 1) return
+    reduceBuffer = setInterval(() => {
+        if (buffer.length < 1) return
 
-                let sum;
-                let bufferLength = buffer.length;
-                ///console.log(buffer);
-                sum = buffer.reduce((pv, cv) => pv + cv);
-                sum = (sum/ bufferLength) / 10;
-                if (sum < -1 || sum >= 1 ){
-                    total = total + sum;
-                }
+        let sum;
+        let bufferLength = buffer.length;
+        ///console.log(buffer);
+        sum = buffer.reduce((pv, cv) => pv + cv);
+        sum = (sum / bufferLength) / 10;
+        if (sum < -1 || sum >= 1) {
+            total = total + sum;
+        }
 
-                // decrease speed for final fine-tuning
-                /*
-                if (Math.abs(deg) - 15 <= Math.abs(total)) {
-                    console.log('slow');
-                    if (direction == "right") {
-                        move.turnRight(pwmSlow);
-                    }else{
-                        move.turnLeft(pwmSlow);
-                    }
-                }*/
+        // decrease speed for final fine-tuning
+        /*
+        if (Math.abs(deg) - 15 <= Math.abs(total)) {
+            console.log('slow');
+            if (direction == "right") {
+                move.turnRight(pwmSlow);
+            }else{
+                move.turnLeft(pwmSlow);
+            }
+        }*/
 
 
-                // stop if arrived at final angle
-                if (Math.abs(deg) - 2 <= Math.abs(total)){
-                    console.log(`um ${total} gedreht`)
-                    move.stop();
-                    clearInterval(reduceBuffer && collectBuffer);
-                    reduceBuffer = null;
-                    collectBuffer = null;
-                    setTimeout(() => {
-                        ws.send(JSON.stringify({chairBusy: false}));
-                        return
-                    }, 2000);
-                    
-                }
-                buffer = [];
-          
+        // stop if arrived at final angle
+        if (Math.abs(deg) - 2 <= Math.abs(total)) {
+            console.log(`um ${total} gedreht`);
+            move.stop();
+            clearInterval(reduceBuffer && collectBuffer);
+            reduceBuffer = null;
+            collectBuffer = null;
+            setTimeout(() => {
+                //ws.send(JSON.stringify({chairBusy: false}));
+                ws.send(JSON.stringify({chairBusy: false}), function (error) {
+                    console.log("send busy: false")
+                });
+
+                return;
+            }, 500);
+
+        }
+        buffer = [];
+
     }, 100);
 
 }
 
 
-function checkDist (ws, dist){
+function checkDist(ws, dist) {
     const space = 25;
     const speed = 18.8;  //cm pro sec
     const pwm = 1;
     // dist  in cm 
     let time = ((dist / space) / speed) * 1000;
-    let buffer = [];
-    let total = 0;
 
     // //* check if moving straight
     // // ! test
@@ -152,9 +157,7 @@ function checkDist (ws, dist){
     setTimeout(() => {
         console.log(`für ${time} gefahren`)
         move.stop();
-         reduceBuffer = null;
-         collectBuffer = null;
-        ws.send(JSON.stringify({ chairBusy: false }));
+        ws.send(JSON.stringify({chairBusy: false}));
     }, time);
 }
 
@@ -174,13 +177,14 @@ wss.on('connection', function connection(ws) {
             // } else {
             //     move.turnLeft(message.velocity);
             // }
-            ws.send(JSON.stringify({chairBusy: true})); checkDeg(ws, message.value);
+            ws.send(JSON.stringify({chairBusy: true}));
+            checkDeg(ws, message.value);
 
         } else if (message.motionType === "Straight") {
-            
-            
-            ws.send(JSON.stringify({chairBusy: true})); checkDist(ws, message.value);
-            
+
+            ws.send(JSON.stringify({chairBusy: true}));
+            checkDist(ws, message.value);
+
         } else if (message.motionType === "Stop") {
 
             ws.send(JSON.stringify({chairBusy: false}));
@@ -195,7 +199,7 @@ wss.on('connection', function connection(ws) {
 });
 
 
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
     move.stop();
     process.exit();
 });
