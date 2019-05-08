@@ -30,15 +30,15 @@ function checkDeg(ws, deg) {
     let total = 0;
     const puffer = 0;
     //const pwm = 0.4;
-    const pwm = settings.turnSpeed;
-    const pwmSlow = settings.turnSpeedSlow;
+    const pwmR = settings.turnSpeedR;
+    const pwmL = settings.turnSpeedL;
     let direction = "";
 
     if (deg > 0) {
-        move.turnRight(pwm);
+        move.turnRight(pwmR, pwmL);
         direction = "right";
     } else {
-        move.turnLeft(pwm);
+        move.turnLeft(pwmR, pwmL);
     }
 
     collectBuffer = setInterval(() => {
@@ -102,9 +102,10 @@ function checkDeg(ws, deg) {
 
 
 function checkDist(ws, dist) {
-    const space = 25;
-    const speed = 18.8;  //cm pro sec
-    const pwm = settings.moveSpeed;
+    const space = settings.moveSpace;
+    const speed = settings.moveSpeed;  //cm pro sec
+    const pwmR = settings.moveSpeedR;
+    const pwmL = settings.moveSpeedL
     // dist  in cm 
     let time = ((dist / space) / speed) * 1000;
 
@@ -158,7 +159,7 @@ function checkDist(ws, dist) {
 
 
     //! remove above und keep this 
-    move.forward(pwm, pwm);
+    move.forward(pwmR, pwmL);
 
     setTimeout(() => {
         console.log(chalk.keyword(settings.consoleColor)(`für ${time} gefahren`));
@@ -168,7 +169,7 @@ function checkDist(ws, dist) {
 }
 
 
-console.log(chalk.keyword(settings.consoleColor)('Websocket listens on port 1312 ...', settings.emoji));
+console.log(chalk.keyword(settings.consoleColor)('Websocket listens on port 1312 ...', settings.emoji, settings.id));
 wss.on('connection', function connection(ws) {
     ws.send(JSON.stringify({chairready: true}));
     console.log(chalk.keyword(settings.consoleColor)('some boi connected ✅'));

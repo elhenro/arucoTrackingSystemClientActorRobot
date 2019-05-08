@@ -7,10 +7,21 @@ module.exports= {
  consoleColor: "orange",
  emoji: '🐯',
 
- moveSpeed  : 1,
- turnSpeed : 0.4,
- turnSpeedSlow : 0.2,
- frequency : 30,
+ moveSpeed  : 1,  //! keep for older versions 
+ turnSpeed : 0.4, //!  --- || ---
+
+ frequency : 30, // pwm frequency
+
+ moveSpeedR : 1,
+ moveSpeedL: 1,
+
+ turnSpeedR : 0.4,
+ turnSpeedL : 0.4,
+
+
+ //! move forward time  //
+ moveSpace : 25, // 25cm chair size
+ moveTime : 18.8, // 18.8 cm pro sec.
 
 
 //! pin setup ///
