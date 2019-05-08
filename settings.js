@@ -21,7 +21,7 @@ module.exports= {
 
  //! move forward time  //
  moveSpace : 25, // 25cm chair size
- moveTime : 18.8, // 18.8 cm pro sec.
+ moveTime : 2, // 18.8 cm pro sec.
 
 
 //! pin setup ///

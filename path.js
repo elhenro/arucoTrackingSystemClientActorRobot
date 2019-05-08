@@ -18,7 +18,7 @@ let reduceBuffer = null;
 let collectBuffer = null;
 let chairBusy = false;
 
-function checkDeg(ws, deg) {
+function checkDeg(deg) {
     chairBusy = true;
     if (reduceBuffer != null && collectBuffer != null) {
         return;
@@ -78,20 +78,12 @@ function checkDeg(ws, deg) {
 
 
         // stop if arrived at final angle
-        if (Math.abs(deg) <= Math.abs(total)) { // -2 deg reemoved
+        if (Math.abs(deg) - 2 <= Math.abs(total)) {
             console.log(chalk.keyword(settings.consoleColor)(`um ${total} gedreht`));
             move.stop();
             clearInterval(reduceBuffer && collectBuffer);
             reduceBuffer = null;
             collectBuffer = null;
-            setTimeout(() => {
-                //ws.send(JSON.stringify({chairBusy: false}));
-                ws.send(JSON.stringify({chairBusy: false}), function (error) {
-                    console.log(chalk.keyword(settings.consoleColor)("send busy: false"));
-                });
-
-                return;
-            }, 1000);
 
         }
         buffer = [];
@@ -101,13 +93,13 @@ function checkDeg(ws, deg) {
 }
 
 
-function checkDist(ws, dist) {
+function checkDist(dist) {
     const space = settings.moveSpace;
     const speed = settings.moveSpeed;  //cm pro sec
     const pwmR = settings.moveSpeedR;
     const pwmL = settings.moveSpeedL;
     // dist  in cm 
-    let time = ((dist * settings.moveTime) / 100) * 1000;
+    let time = ((dist / space) / speed) * 1000;
 
     // //* check if moving straight
     // // ! test
@@ -164,49 +156,34 @@ function checkDist(ws, dist) {
     setTimeout(() => {
         console.log(chalk.keyword(settings.consoleColor)(`für ${time} gefahren`));
         move.stop();
-        ws.send(JSON.stringify({chairBusy: false}));
     }, time);
 }
-
-
-console.log(chalk.keyword(settings.consoleColor)('Websocket listens on port 1312 ...', settings.emoji, settings.id));
-wss.on('connection', function connection(ws) {
-    ws.send(JSON.stringify({chairready: true}));
-    console.log(chalk.keyword(settings.consoleColor)('some boi connected ✅'));
-    
-    ws.on('message', function incoming(message) {
-        console.log(chalk.keyword(settings.consoleColor)('received: %s', message));
-        message = JSON.parse(message);
-        if (message.motionType === "Rotation") {
-            // if (message.angle > 0) {
-            //     checkDeg(message.angle)
-            //     move.turnRight(message.velocity);
-            // } else {
-            //     move.turnLeft(message.velocity);
-            // }
-            ws.send(JSON.stringify({chairBusy: true}));
-            checkDeg(ws, message.value);
-
-        } else if (message.motionType === "Straight") {
-
-            ws.send(JSON.stringify({chairBusy: true}));
-            checkDist(ws, message.value);
-
-        } else if (message.motionType === "Stop") {
-
-            ws.send(JSON.stringify({chairBusy: false}));
-            move.stop();
-        }
-    });
-
-    ws.on('close', function (data) {
-        console.log(chalk.keyword(settings.consoleColor)('closed connection', data, settings.emoji));
-        move.stop();
-    });
-});
 
 
 process.on('SIGINT', function () {
     move.stop();
     process.exit();
 });
+
+
+function path(){
+    checkDeg(88);
+    setTimeout(() => {
+        checkDist(80);
+        setTimeout(() => {
+            checkDeg(88);
+            setTimeout(() => {
+                checkDist(80);
+                setTimeout(() => {
+                    checkDist(80)
+                    setTimeout(() => {
+                        checkDeg(-90);
+                    }, 3000);
+                }, 3000);
+            }, 3500);
+        }, 3000);
+    }, 3500);
+}
+
+
+path();
