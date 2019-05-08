@@ -4,7 +4,7 @@
 module.exports= {
 
  id : 15,
- consoleColor : "red",
+ consoleColor: "orange",
  emoji: '🐯',
 
  moveSpeed  : 1,

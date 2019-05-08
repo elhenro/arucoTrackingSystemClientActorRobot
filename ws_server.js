@@ -5,6 +5,7 @@
 const settings = require('./settings');
 const move = require('./move');
 const WebSocket = require('ws');
+const chalk = require('chalk');
 
 const wss = new WebSocket.Server({port: 1312});
 
@@ -73,7 +74,7 @@ function checkDeg(ws, deg) {
 
         // stop if arrived at final angle
         if (Math.abs(deg) - 2 <= Math.abs(total)) {
-            console.log(`um ${total} gedreht`);
+            console.log(chalk.keyword(settings.consoleColor)(`um ${total} gedreht`));
             move.stop();
             clearInterval(reduceBuffer && collectBuffer);
             reduceBuffer = null;
@@ -81,7 +82,7 @@ function checkDeg(ws, deg) {
             setTimeout(() => {
                 //ws.send(JSON.stringify({chairBusy: false}));
                 ws.send(JSON.stringify({chairBusy: false}), function (error) {
-                    console.log("send busy: false")
+                    console.log(chalk.keyword(settings.consoleColor)("send busy: false"));
                 });
 
                 return;
@@ -155,20 +156,20 @@ function checkDist(ws, dist) {
     move.forward(pwm, pwm);
 
     setTimeout(() => {
-        console.log(`für ${time} gefahren`)
+        console.log(chalk.keyword(settings.consoleColor)(`für ${time} gefahren`));
         move.stop();
         ws.send(JSON.stringify({chairBusy: false}));
     }, time);
 }
 
 
-console.log('Websocket listens on port 1312 ...', settings.emoji);
+console.log(chalk.keyword(settings.consoleColor)('Websocket listens on port 1312 ...', settings.emoji));
 wss.on('connection', function connection(ws) {
     ws.send(JSON.stringify({chairready: true}));
-    console.log('some boi connected ✅');
+    console.log(chalk.keyword(settings.consoleColor)('some boi connected ✅'));
     
     ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
+        console.log(chalk.keyword(settings.consoleColor)('received: %s', message));
         message = JSON.parse(message);
         if (message.motionType === "Rotation") {
             // if (message.angle > 0) {
@@ -193,7 +194,7 @@ wss.on('connection', function connection(ws) {
     });
 
     ws.on('close', function (data) {
-        console.log('closed connection', data, settings.emoji);
+        console.log(chalk.keyword(settings.consoleColor)('closed connection', data, settings.emoji));
         move.stop();
     });
 });
