@@ -105,7 +105,7 @@ function checkDist(ws, dist) {
     const space = settings.moveSpace;
     const speed = settings.moveSpeed;  //cm pro sec
     const pwmR = settings.moveSpeedR;
-    const pwmL = settings.moveSpeedL
+    const pwmL = settings.moveSpeedL;
     // dist  in cm 
     let time = ((dist / space) / speed) * 1000;
 

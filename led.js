@@ -103,7 +103,7 @@ stdin.addListener("data", function(d) {
   switch (d.toString().trim()) {
     case 'go':
       move.stop();
-      move.forward(settings.moveSpeed, settings.moveSpeed);
+      move.forward(settings.moveSpeedR, settings.moveSpeedL);
       //console.log('\033[2J');
       //console.log('⏫');
       if (spinner1.isSpinning) {
@@ -119,7 +119,7 @@ stdin.addListener("data", function(d) {
       break;
     case 'back':
       move.stop();
-      move.back(settings.moveSpeed);
+      move.back(settings.moveSpeedR, settings.moveSpeedL);
       //console.log('\033[2J');
       //console.log('⏫');
       if (spinner1.isSpinning) {
@@ -149,7 +149,7 @@ stdin.addListener("data", function(d) {
       break;
     case 'left':
       move.stop();
-      move.turnLeft(settings.turnSpeed);
+      move.turnLeft(settings.turnSpeedR, settings.turnSpeedL);
       if (spinner1.isSpinning) {
         spinner1.succeed('next');
       }
@@ -164,7 +164,7 @@ stdin.addListener("data", function(d) {
       break;
     case 'right':
       move.stop();
-      move.turnRight(settings.turnSpeed);
+      move.turnRight(settings.turnSpeedR, settings.turnSpeedL);
       if (spinner1.isSpinning) {
         spinner1.succeed('next');
       }
