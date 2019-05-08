@@ -8,7 +8,7 @@ module.exports= {
  emoji: '🐯',
 
  moveSpeed  : 1,
- turnSpeed : 0.3,
+ turnSpeed : 0.4,
  turnSpeedSlow : 0.2,
  frequency : 30,
 

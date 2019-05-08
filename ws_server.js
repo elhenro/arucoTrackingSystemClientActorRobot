@@ -42,8 +42,13 @@ function checkDeg(ws, deg) {
     }
 
     collectBuffer = setInterval(() => {
-        mpu.getRotation((err, [x, y, z]) => {
-            buffer.unshift(z / 131);
+        mpu.getRotation((err, [x, y, z] = [0, 0, 0]) => {
+            if(err){
+                console.log(chalk.keyword('red')('mpu error!!!'))
+                return
+            }
+             buffer.unshift(z / 131);
+
         });
     }, 10);
 
