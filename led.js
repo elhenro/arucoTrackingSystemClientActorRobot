@@ -60,7 +60,7 @@ client.on('data', function(data) {
 	console.log(data.toString());
   if (data == 'go') {
     move.stop();
-    move.forward(settings.moveSpeed);
+    move.forward(settings.moveSpeed, settings.moveSpeed);
     // console.log(true);
   }
   else if (data == 'back') {
@@ -103,7 +103,7 @@ stdin.addListener("data", function(d) {
   switch (d.toString().trim()) {
     case 'go':
       move.stop();
-      move.forward(settings.moveSpeed);
+      move.forward(settings.moveSpeed, settings.moveSpeed);
       //console.log('\033[2J');
       //console.log('⏫');
       if (spinner1.isSpinning) {
